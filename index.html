@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html ng-app="myApp" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .box{
+            width: 100px;
+            height: 100px;
+            background-color: red;
+            transition: all 2s;
+        }
+        .largeBox{
+            width: 200px;
+            height: 200px;
+            background-color: blue;
+        }
+    </style>
+    <script src="./node_modules/angular/angular.js"></script>
+</head>
+<body ng-controller="myController">
+    <div  mouse-enter="largeBox"   class="box"></div>
+    <p  mouse-enter="largeBox"   class="box"></p>
+</body>
+<script>
+    //1. 创建模块
+    var app = angular.module('myApp', []);
+
+    //2. 创建指令
+    app.directive('mouseEnter', [function(){
+        return {
+            restrict:'ACEM',
+          //  template: '<p>你好</p>',
+           // scope:{}, //将template/templateUrl的作用域进行分离， 事先会有自己作用域，创建自己的独立作用域
+            link: function(scope, element, attrs){
+                console.log('--------link');
+                /*
+                    link函数是在指令被添加到html的某个元素使用的时候，就会执行
+
+                    指令的功能：列表，下拉刷新，拖拽，发送ajax。。。。
+
+                    函数调用是由angular调用，不是手动由程序员调用
+                    三个参数：
+                    scope: 代表是template/templateUrl 的作用域
+                    element: 代表是使用该指令的元素的jqlite封装 element=  angular.element(box)
+                    attrs: 代表是使用该指令的元素上面的属性
+                 */
+
+                console.log(scope, element, attrs);
+                var myClass = attrs.mouseEnter ; // 动态的获得样式
+                element.on('mouseenter', function(){
+                    if(!element.hasClass(myClass))
+                        element.addClass(myClass)
+                }).on('mouseleave', function(){
+                    if(element.hasClass(myClass))
+                        element.removeClass(myClass)
+                })
+            }
+        }
+    }]);
+    app.controller('myController', ['$scope', function($scope){
+
+    }])
+</script>
+</html>
